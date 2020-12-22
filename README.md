@@ -4,6 +4,14 @@ This repo contains code to reproduce experiments in the paper "Initialization an
 
 ## Getting Started
 
+The codebase has been tested with Python 3.6 and CUDA 10. Executing <tt>sh setup.sh</tt> will install requirements and generate experimental scripts in the subfolders "\*/generated-scripts" that can be run to compute all ResNet experiments, lottery-ticket-guessing comparisons, and Transformer translation experiments. Note that this is a large number of scripts; instructions for individual experiments are provided in the following three sections.
+
+## ResNet Experiments
+
+## Lottery-Ticket-Guessing Comparisons
+
+## Transformer Translation Experiments
+
 ## Citation
   
     @misc{khodak2021factorized,
