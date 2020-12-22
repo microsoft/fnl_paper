@@ -1,7 +1,16 @@
-# Project
+# Factorized Neural Layers
 
-> This repo has been populated by an initial template to help get you started. Please
-> make sure to update the content to build a great experience for community-building.
+This repo contains code to reproduce experiments in the paper "Initialization and Regularization of Factorized Neural Layers" (citation below). It is split into codebases for different models and settings we evaluate; please see the corresponding directories for information about the relevant papers.
+
+## Getting Started
+
+## Citation
+  
+    @misc{khodak2021factorized,
+      title={Initalization and Regularization of Factorized Neural Layers},
+      author={Mikhail Khodak and Neil A. Tenenholtz and Lester Mackey and Nicol\`o Fusi},
+      year={2021}
+    }
 
 As the maintainer of this project, please make a few updates:
 
