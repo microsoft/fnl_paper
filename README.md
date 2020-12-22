@@ -43,7 +43,7 @@ python main_pretrain.py --dataset tiny_imagenet --network vgg --weight_decay 2E-
 To train a factorized small Transformer with spectral initialization and Frobenius decay on all linear layers, the Query-Key quadratic form in MHA, and the Output-Value quadratic form in MHA, run
 ```
 python train.py data-bin/iwslt14.tokenized.de-en --arch transformer_small --clip-norm 0.1 --dropout 0.2 --max-tokens 4000 --criterion label_smoothed_cross_entropy --label-smoothing 0.1 --lr-scheduler inverse_sqrt --lr 0.25 --optimizer nag --warmup-init-lr 0.25 --warmup-updates 4000 --max-update 100000 --no-epoch-checkpoints --save-dir results
---rank-scale 0.5 --spectral --spectral-quekey --spectral-outval --wd2fd --wd2fd-quekey --wd2fd-outval
+--rank-scale 0.5 --spectral --spectral-quekey --spectral-outval --wd2fd --wd2fd-quekey --wd2fd-outval --distributed-world-size 1
 python generate.py data-bin/iwslt14.tokenized.de-en --batch-size 128 --beam 5 --remove-bpe --quiet --path results/checkpoint_best.pt --dump results/bleu.log --rank-scale 0.5
 ```
 

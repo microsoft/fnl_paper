@@ -301,7 +301,7 @@ def resnet_settings():
                                     settings.append(resnet_command(data=data, scale=scale, depth=str(depth), 
                                                                    spectral=spectral, frob=frob, 
                                                                    square=square, residual=residual))
-                elif logscale == -2 and data == 'cifar10':
+                elif logscale == -2 and depth == 20 and data == 'cifar10':
                     for decay in [5E-6, 1E-5, 5E-5, 5E-4, 1E-3, 5E-3]:
                         for frob in [False, True]:
                             settings.append(resnet_command(data=data, scale=scale, depth=str(depth), 
