@@ -148,7 +148,7 @@ def main():
 
     cifar = datasets.CIFAR100 if args.data == 'cifar100' else datasets.CIFAR10
     train_loader = torch.utils.data.DataLoader(
-        cifar(root='./data', train=True, transform=transforms.Compose([
+        cifar(root='../data', train=True, transform=transforms.Compose([
             transforms.RandomHorizontalFlip(),
             transforms.RandomCrop(32, 4),
             transforms.ToTensor(),
@@ -158,7 +158,7 @@ def main():
         num_workers=args.workers, pin_memory=True)
 
     val_loader = torch.utils.data.DataLoader(
-        cifar(root='./data', train=False, transform=transforms.Compose([
+        cifar(root='../data', train=False, transform=transforms.Compose([
             transforms.ToTensor(),
             normalize,
         ])),
