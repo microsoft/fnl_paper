@@ -4,13 +4,48 @@ This repo contains code to reproduce experiments in the paper "Initialization an
 
 ## Getting Started
 
-The codebase has been tested with Python 3.6 and CUDA 10. Executing <tt>sh setup.sh</tt> will install requirements and generate experimental scripts in the subfolders "\*/generated-scripts" that can be run to compute all ResNet experiments, lottery-ticket-guessing comparisons, and Transformer translation experiments. Note that this is a large number of scripts; instructions for individual experiments are provided in the following three sections.
+The codebase has been tested with Python 3.6 and CUDA 10. Executing <tt>sh setup.sh</tt> will install requirements and generate experimental scripts in the subfolders <tt>\*/generated-scripts</tt> that can be run to compute all ResNet experiments, model compression comparisons, and Transformer translation experiments. Note that this is a large number of scripts; examples for individual experiments are provided in the following three sections.
 
-## ResNet Experiments
+Note that the results require the TinyImageNet dataset, which can be downloaded from [here](http://cs231n.stanford.edu/tiny-imagenet-200.zip), and the IWSLT'14 German-English translation dataset, which can be constructed by following the instructions in <tt>Transformer-PyTorch/data</tt>.
 
-## Lottery-Ticket-Guessing Comparisons
+## ResNet Experiments <tt>[pytorch_resnet_cifar10]</tt>
 
-## Transformer Translation Experiments
+To train a factorized ResNet20 on CIFAR-10 with spectral initialization and Frobenius decay run
+```
+python trainer.py --arch resnet20 --rank-scale 0.111 --save-dir results/resnet20-factorized --spectral --wd2fd
+```
+
+To run the normalization experiment run
+```
+python trainer.py --arch resnet20 --rank-scale 0.111 --seed 0 --save-dir results/resnet20-frob --dump-frobnorms --wd2fd
+python trainer.py --arch resnet20 --rank-scale 0.111 --seed 0 --save-dir results/resnet20-norm --no-frob --normalize frob/frobnorms.tensor
+```
+
+To perform a deep distillation with ResNet32 on CIFAR-100 run
+```
+python trainer.py --data cifar100 --arch resnet32 --rank-scale 1.0 --square --save-dir results/resnet32-deep --wd2fd
+```
+
+## Model Compression Comparisons <tt>[EigenDamage-Pytorch]</tt>
+
+To train a factorized ResNet32 on CIFAR-10 with target compression rate 0.1 using spectral initialization and Frobenius decay run
+```
+python main_pretrain.py --network resnet --weight_decay 1E-4 --depth 32 --target-ratio 0.1 --log_dir results/resnet32 --spectral --wd2fd
+```
+
+To train a factorized VGG19 on TinyImageNet with target compression rate 0.02 using spectral initialization and Frobenius decay run
+```
+python main_pretrain.py --dataset tiny_imagenet --network vgg --weight_decay 2E-4 --depth 19 --target-ratio 0.02 --log_dir results/vgg19 --spectral --wd2fd
+```
+
+## Transformer Translation Experiments <tt>[Transformer-PyTorch]</tt>
+
+To train a factorized small Transformer with spectral initialization and Frobenius decay on all linear layers, the Query-Key quadratic form in MHA, and the Output-Value quadratic form in MHA, run
+```
+python train.py data-bin/iwslt14.tokenized.de-en --arch transformer_small --clip-norm 0.1 --dropout 0.2 --max-tokens 4000 --criterion label_smoothed_cross_entropy --label-smoothing 0.1 --lr-scheduler inverse_sqrt --lr 0.25 --optimizer nag --warmup-init-lr 0.25 --warmup-updates 4000 --max-update 100000 --no-epoch-checkpoints --save-dir results
+--rank-scale 0.5 --spectral --spectral-quekey --spectral-outval --wd2fd --wd2fd-quekey --wd2fd-outval
+python generate.py data-bin/iwslt14.tokenized.de-en --batch-size 128 --beam 5 --remove-bpe --quiet --path results/checkpoint_best.pt --dump results/bleu.log --rank-scale 0.5
+```
 
 ## Citation
   
