@@ -39,13 +39,16 @@ def generate_scripts(settings, folder, reverse=False, trials=1, devices=1, resul
 
     totals = {device: 0.0 for device in range(devices)}
     info = {device: [] for device in range(devices)}
-    for command, specs, total in sorted(settings, key=itemgetter(2), reverse=reverse):
+    names = {}
+    for command, specs, total, name in sorted(settings, key=itemgetter(2), reverse=reverse):
         for trial in range(1, trials+1 if one_trial else 2):
             device = min(totals.items(), key=itemgetter(1))[0]
             totals[device] += (1 if one_trial else trials) * total
-            info[device].append((command, specs, 
+            info[device].append((command, 
+                                 specs, 
                                  str(trial if one_trial else 1), 
                                  str(trial if one_trial else trials)))
+            names[device] = name + ('--'+str(trial) if one_trial else '')
 
     scriptdir = os.path.join(folder, SCRIPTS)
     os.makedirs(scriptdir, exist_ok=True)
@@ -53,7 +56,8 @@ def generate_scripts(settings, folder, reverse=False, trials=1, devices=1, resul
     for device, settings in info.items():
         if not settings:
             continue
-        scriptname = 'device' + str(device) + '.sh'
+        scriptname = names[device] + '.sh'
+        #scriptname = 'device' + str(device) + '.sh'
         with open(os.path.join(folder, SCRIPTS, scriptname), 'w') as f:
             f.write('#!/bin/bash\n\n\nGPU=' + str(0 if one_gpu else device))
             f.write('\nexport PYTHONPATH="..:"$PYTHONPATH\nRESULTS='+results+'\n\n')
@@ -122,7 +126,7 @@ def lottery_command(network='resnet_32_x2',
                                         name,
                                         '$TRIAL'))
 
-    return command, specs, LOTTERY_MINUTES(data, network)
+    return command, specs, LOTTERY_MINUTES(data, network), '-'.join([data, network, ratio, name])
 
 def lottery_settings():
 
@@ -183,7 +187,7 @@ def tensor_command(decomp='Conv',
                                         name,
                                         '$TRIAL'))
 
-    return command, specs, TENSOR_MINUTES(ratio)
+    return command, specs, TENSOR_MINUTES(ratio), '-'.join([decomp, ratio, name])
     
 def tensor_settings():
 
@@ -265,7 +269,7 @@ def transformer_command(scale='0.0',
                                         '$DECAY',
                                         '$TRIAL'))
 
-    return '\n\t'.join(commands), specs, TRANSFORMER_MINUTES
+    return '\n\t'.join(commands), specs, TRANSFORMER_MINUTES, '-'.join([name, 'scale_'+scale, 'decay_'+decay])
 
 def transformer_settings():
 
@@ -344,7 +348,8 @@ def resnet_command(data='cifar10',
                                         '-'.join(['$MODEL', '$DATA']),
                                         '$SCALE',
                                         name))
-    return command, specs, RESNET_MINUTES(depth, norm)
+    return command, specs, RESNET_MINUTES(depth, norm), \
+            '-'.join([data, 'resnet'+depth, 'scale_'+scale, name.replace('$DECAY', 'decay_'+decay).replace('$TRIAL', '').replace('$STD', '').replace('/', '-')])[:-1]
 
 def resnet_settings():
 
@@ -379,7 +384,7 @@ if __name__ == '__main__':
               'devices': 10000,
               'results': 'results',
               'one_gpu': True,
-              'one_trial': True}
+              'one_trial': False}
     generate_scripts(lottery_settings(), LOTTERY, reverse=True, **kwargs)
     generate_scripts(tensor_settings(), TENSOR, **kwargs)
     generate_scripts(transformer_settings(), TRANSFORMER, **kwargs)

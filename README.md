@@ -4,7 +4,7 @@ This repo contains code to reproduce experiments in the paper "Initialization an
 
 ## Getting Started
 
-The codebase has been tested with Python 3.6 and CUDA 10. Executing <tt>sh setup.sh</tt> will install requirements and generate experimental scripts in the subfolders <tt>\*/generated-scripts</tt> that can be run to compute all ResNet experiments, model compression comparisons, and Transformer translation experiments. Note that this is a large number of scripts; examples for individual experiments are provided in the following three sections.
+The codebase has been tested with Python 3.6 and CUDA 10. Executing <tt>sh setup.sh</tt> will install requirements and generate experimental scripts in the subfolders <tt>\*/generated-scripts</tt> that can be run to compute all ResNet experiments (including normalization plots and distillation results), model compression comparisons, tensor comparisons, and Transformer translation experiments. For reproducing specific experiments please see the appropriately named script; we have also provided example commands for these four settings below.
 
 Parts of the code require the TinyImageNet dataset, which can be downloaded from [here](http://cs231n.stanford.edu/tiny-imagenet-200.zip), and the IWSLT'14 German-English translation dataset, which can be constructed by following the instructions in <tt>Transformer-PyTorch/data</tt>. The scripts also require the home directory of this repo to be in the <tt>PYTHONPATH</tt>.
 
