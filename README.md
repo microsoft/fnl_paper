@@ -38,6 +38,18 @@ To train a factorized VGG19 on TinyImageNet with target compression rate 0.02 us
 python main_pretrain.py --dataset tiny_imagenet --network vgg --weight_decay 2E-4 --depth 19 --target-ratio 0.02 --log_dir results/vgg19 --spectral --wd2fd
 ```
 
+## Tensor Comparisons <tt>[deficient-efficient]</tt>
+
+To train a factorized WideResNet28-10 on CIFAR-10 with target compression rate 0.06667 using spectral initialization and Frobenius decay run
+```
+python main.py cifar10 teacher --wrn_depth 28 --wrn_width 10 --epochs 200 --conv Conv -t results/conv --target-ratio 0.06667 --spectral --wd2fd
+```
+
+To train a Tensor-Train-factorized VGG19 WideResNet28-10 on CIFAR-10 with target compression rate 0.01667 using spectral initialization and Frobenius decay run
+```
+python main.py cifar10 teacher --wrn_depth 28 --wrn_width 10 --epochs 200 --conv TensorTrain_0.234 -t results/tt --spectral --wd2fd
+```
+
 ## Transformer Translation Experiments <tt>[Transformer-PyTorch]</tt>
 
 To train and evaluate the resulting BLEU scroe of a factorized small Transformer with spectral initialization and Frobenius decay on all linear layers, the Query-Key quadratic form in MHA, and the Output-Value quadratic form in MHA, run
