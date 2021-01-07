@@ -7,6 +7,7 @@ from operator import itemgetter
 
 LOTTERY = "EigenDamage-Pytorch"
 RESNET = 'pytorch_resnet_cifar10'
+TENSOR = "deficient-efficient"
 TRANSFORMER = "Transformer-PyTorch"
 SCRIPTS = "generated-scripts"
 
@@ -133,6 +134,66 @@ def lottery_settings():
                     for frob in [False, True] if ratio else [False]:
                         settings.append(lottery_command(network=network, data=data, ratio=str(ratio), 
                                                         spectral=spectral, frob=frob))
+    return settings
+
+
+TENSOR_COMMAND = ['python main.py',
+                  '$DATA',
+                  'teacher',
+                  '--wrn_depth 28',
+                  '--wrn_width 10',
+                  '--GPU $GPU',
+                  '--epochs 200',
+                  '--conv $CONV',
+                  '-t $LOGDIR']
+TENSOR_MINUTES = lambda ratio: 180 if float(ratio) < 1.0 else 270
+
+def tensor_command(decomp='Conv',
+                   ratio='0.1',
+                   spectral=False,
+                   decay='reglr'):
+
+    command = ' '.join(TENSOR_COMMAND)
+    specs = ['DATA=cifar10',
+             'RATIO='+ratio,
+             'CONV='+decomp]
+    if decomp == 'Conv':
+        command += ' --target-ratio $RATIO'
+    else:
+        specs[-1] += '_$RATIO'
+
+    methods = []
+    if spectral:
+        command += ' --spectral'
+        methods.append('spectral')
+    if decay == 'crs':
+        methods.append(decay)
+    elif decay == 'frob':
+        command += ' --wd2fd'
+        methods.append(decay)
+    elif decay == 'reglr':
+        command += ' --nocrswd'
+    else:
+        raise(NotImplementedError)
+    name = '+'.join(methods) if methods else decay
+
+    specs.append('LOGDIR='+os.path.join('$RESULTS',
+                                        '-'.join([decomp, 'wrn_28_10', '$DATA']),
+                                        '$RATIO',
+                                        name,
+                                        '$TRIAL'))
+
+    return command, specs, TENSOR_MINUTES(ratio)
+    
+def tensor_settings():
+
+    settings = []
+    for decomp in ['Conv', 'TensorTrain', 'Tucker']:
+        for ratio in {'Conv': [0.0, 0.01667, 0.06667], 'TensorTrain': [0.234, 0.705], 'Tucker': [0.211, 0.68]}[decomp]:
+            for spectral in [False, True] if ratio else [False]:
+                for decay in ['reglr', 'crs', 'frob'] if ratio else ['reglr']:
+                    settings.append(tensor_command(decomp=decomp, ratio=str(ratio), 
+                                                   spectral=spectral, decay=decay))
     return settings
 
 
@@ -301,7 +362,7 @@ def resnet_settings():
                                     settings.append(resnet_command(data=data, scale=scale, depth=str(depth), 
                                                                    spectral=spectral, frob=frob, 
                                                                    square=square, residual=residual))
-                elif logscale == -2 and data == 'cifar10':
+                elif logscale == -2 and depth == 20 and data == 'cifar10':
                     for decay in [5E-6, 1E-5, 5E-5, 5E-4, 1E-3, 5E-3]:
                         for frob in [False, True]:
                             settings.append(resnet_command(data=data, scale=scale, depth=str(depth), 
@@ -320,5 +381,6 @@ if __name__ == '__main__':
               'one_gpu': True,
               'one_trial': True}
     generate_scripts(lottery_settings(), LOTTERY, reverse=True, **kwargs)
+    generate_scripts(tensor_settings(), TENSOR, **kwargs)
     generate_scripts(transformer_settings(), TRANSFORMER, **kwargs)
     generate_scripts(resnet_settings(), RESNET, reverse=True, **kwargs)

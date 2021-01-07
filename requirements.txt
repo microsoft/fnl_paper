@@ -3,5 +3,6 @@ torchvision
 tqdm
 tensorboardX
 easydict
+tntorch
 cffi
 numpy
