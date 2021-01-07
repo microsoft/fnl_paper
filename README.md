@@ -6,7 +6,7 @@ This repo contains code to reproduce experiments in the paper "Initialization an
 
 The codebase has been tested with Python 3.6 and CUDA 10. Executing <tt>sh setup.sh</tt> will install requirements and generate experimental scripts in the subfolders <tt>\*/generated-scripts</tt> that can be run to compute all ResNet experiments, model compression comparisons, and Transformer translation experiments. Note that this is a large number of scripts; examples for individual experiments are provided in the following three sections.
 
-Note that the results require the TinyImageNet dataset, which can be downloaded from [here](http://cs231n.stanford.edu/tiny-imagenet-200.zip), and the IWSLT'14 German-English translation dataset, which can be constructed by following the instructions in <tt>Transformer-PyTorch/data</tt>.
+Parts of the code require the TinyImageNet dataset, which can be downloaded from [here](http://cs231n.stanford.edu/tiny-imagenet-200.zip), and the IWSLT'14 German-English translation dataset, which can be constructed by following the instructions in <tt>Transformer-PyTorch/data</tt>. The scripts also require the home directory of this repo to be in the <tt>PYTHONPATH</tt>.
 
 ## ResNet Experiments <tt>[pytorch_resnet_cifar10]</tt>
 
@@ -40,10 +40,10 @@ python main_pretrain.py --dataset tiny_imagenet --network vgg --weight_decay 2E-
 
 ## Transformer Translation Experiments <tt>[Transformer-PyTorch]</tt>
 
-To train a factorized small Transformer with spectral initialization and Frobenius decay on all linear layers, the Query-Key quadratic form in MHA, and the Output-Value quadratic form in MHA, run
+To train and evaluate the resulting BLEU scroe of a factorized small Transformer with spectral initialization and Frobenius decay on all linear layers, the Query-Key quadratic form in MHA, and the Output-Value quadratic form in MHA, run
 ```
 python train.py data-bin/iwslt14.tokenized.de-en --arch transformer_small --clip-norm 0.1 --dropout 0.2 --max-tokens 4000 --criterion label_smoothed_cross_entropy --label-smoothing 0.1 --lr-scheduler inverse_sqrt --lr 0.25 --optimizer nag --warmup-init-lr 0.25 --warmup-updates 4000 --max-update 100000 --no-epoch-checkpoints --save-dir results
---rank-scale 0.5 --spectral --spectral-quekey --spectral-outval --wd2fd --wd2fd-quekey --wd2fd-outval
+--rank-scale 0.5 --spectral --spectral-quekey --spectral-outval --wd2fd --wd2fd-quekey --wd2fd-outval --distributed-world-size 1
 python generate.py data-bin/iwslt14.tokenized.de-en --batch-size 128 --beam 5 --remove-bpe --quiet --path results/checkpoint_best.pt --dump results/bleu.log --rank-scale 0.5
 ```
 
