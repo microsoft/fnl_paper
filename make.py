@@ -361,12 +361,11 @@ def resnet_settings():
                 scale = str(round(3.0 ** logscale, 3))
                 if depth in {32, 56, 110}: 
                     for square in [False] if logscale else [False, True]:
-                        for residual in [False, True] if square else [False]:
-                            for spectral in [False, True]:
-                                for frob in [False, True]:
-                                    settings.append(resnet_command(data=data, scale=scale, depth=str(depth), 
-                                                                   spectral=spectral, frob=frob, 
-                                                                   square=square, residual=residual))
+                        for spectral in [False, True] if logscale <= 0 else [False]:
+                            for frob in [False, True]:
+                                settings.append(resnet_command(data=data, scale=scale, depth=str(depth), 
+                                                               spectral=spectral, frob=frob, 
+                                                               square=square, residual=False))
                 elif logscale == -2 and depth == 20 and data == 'cifar10':
                     for decay in [5E-6, 1E-5, 5E-5, 5E-4, 1E-3, 5E-3]:
                         for frob in [False, True]:
