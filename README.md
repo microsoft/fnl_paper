@@ -45,7 +45,7 @@ To train a factorized WideResNet28-10 on CIFAR-10 with target compression rate 0
 python main.py cifar10 teacher --wrn_depth 28 --wrn_width 10 --epochs 200 --conv Conv -t results/conv --target-ratio 0.06667 --spectral --wd2fd
 ```
 
-To train a Tensor-Train-factorized VGG19 WideResNet28-10 on CIFAR-10 with target compression rate 0.01667 using spectral initialization and Frobenius decay run
+To train a Tensor-Train-factorized WideResNet28-10 on CIFAR-10 with target compression rate 0.01667 using spectral initialization and Frobenius decay run
 ```
 python main.py cifar10 teacher --wrn_depth 28 --wrn_width 10 --epochs 200 --conv TensorTrain_0.234 -t results/tt --spectral --wd2fd
 ```
