@@ -61,9 +61,10 @@ python generate.py data-bin/iwslt14.tokenized.de-en --batch-size 128 --beam 5 --
 
 ## Citation
   
-    @misc{khodak2021factorized,
+    @inproceedings{khodak2021factorized,
       title={Initalization and Regularization of Factorized Neural Layers},
       author={Mikhail Khodak and Neil A. Tenenholtz and Lester Mackey and Nicol\`o Fusi},
+      booktitle={Proceedings of the 10th International Conference on Learning Representations},
       year={2021}
     }
 
