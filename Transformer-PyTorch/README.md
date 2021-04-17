@@ -95,3 +95,14 @@ Our many works are built upon this project, include:
 
 # License
 fairseq is BSD-licensed. The released codes modified the original fairseq are BSD-licensed. The rest of the codes are MIT-licensed.
+
+# Main changes from the [original code](https://github.com/StillKeepTry/Transformer-PyTorch) <tt>[fnl_paper/Transformer-PyTorch]</tt> 
+Excludes additional logging, new module imports, passing arguments through objects, etc.
+```
+fairseq/models/transformer.py: 262-326
+fairseq/models/transformer.py: 349-350
+fairseq/options.py: 80-87
+fairseq/trainer.py: 192-193
+singleprocess_train.py: 30-73
+singleprocess_train.py: 102-125
+```
