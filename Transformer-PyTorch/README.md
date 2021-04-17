@@ -99,10 +99,11 @@ fairseq is BSD-licensed. The released codes modified the original fairseq are BS
 # Main changes from the [original code](https://github.com/StillKeepTry/Transformer-PyTorch) <tt>[fnl_paper/Transformer-PyTorch]</tt> 
 Excludes additional logging, new module imports, passing arguments through objects, etc.
 ```
-fairseq/models/transformer.py: 262-326
-fairseq/models/transformer.py: 349-350
-fairseq/options.py: 80-87
-fairseq/trainer.py: 192-193
-singleprocess_train.py: 30-73
-singleprocess_train.py: 102-125
+File                            Lines     Description
+fairseq/models/transformer.py:  262-326   convenience modules to compute squared Frobenius gradients of the QK^T and OV^T factorizations in MHA
+fairseq/models/transformer.py:  349-350   add the modules defined in 262-326 to MHA (no new parameters or changes to forward pass)
+fairseq/options.py:             80-87     additional options for factorized layers
+fairseq/trainer.py:             192-193   adds gradients due to Frobenius decay to relevant model parameters
+singleprocess_train.py:         30-73     defines FactorizedEmbedding layer, method to factorize Linear/Embedding layers, and spectral init for MHA
+singleprocess_train.py:         102-125   applies the methods defined in 102-125 to the Transformer model
 ```
