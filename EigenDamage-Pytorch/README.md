@@ -25,7 +25,7 @@ pip install scikit-tensor
 ```
 
 # Dataset
-1. Download tiny imagenet from "https://tiny-imagenet.herokuapp.com", and place it in ../data/tiny_imagenet.
+1. Download tiny imagenet, and place it in ../data/tiny_imagenet.
    Please make sure there will be two folders, `train` and `val`,  under the directory of `../data/tiny_imagenet`.
    In either `train` or `val`, there will be 200 folders storing the images of each category.
    
